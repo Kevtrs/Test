@@ -1,0 +1,93 @@
+/* =========================================================================
+   Photobooth — feuille de style d'IMPRESSION UNIQUEMENT
+   Chargée avec media="print" : n'a aucun effet à l'écran.
+   Objectif : n'imprimer QUE le montage final, sans aucune interface, marge,
+   ombre ou bordure indésirable, en remplissant TOUTE la page imprimée.
+
+   Important : iPadOS ne respecte pas toujours la taille de page demandée
+   via @page (elle peut retomber sur un gabarit Lettre/A4 par défaut). Pour
+   rester fiable quelle que soit la taille réellement utilisée par le
+   système, le montage est dimensionné en 100% de la page plutôt qu'en
+   millimètres fixes : il remplit ainsi TOUJOURS tout l'espace disponible,
+   sans bande blanche, quel que soit le gabarit choisi par iOS. C'est
+   ensuite la mise à l'échelle "ajuster au papier" d'AirPrint qui reporte
+   cette page pleine sur le papier 10 x 15 réellement chargé dans la Canon
+   SELPHY CP1500.
+
+   NOTE : iOS ajoute parfois de lui-même une petite mention (adresse du
+   site + date) dans la marge lorsqu'il imprime une page web — ce n'est pas
+   pilotable en CSS, c'est ajouté par le système au moment de l'impression,
+   pas par cette feuille de style. En contrepartie, window.print() est la
+   méthode qui ouvre le plus directement la fenêtre de choix d'imprimante,
+   sans étape intermédiaire : c'est le compromis retenu pour une borne
+   utilisée sans assistance par de jeunes invités.
+   ========================================================================= */
+
+@page {
+  size: 100mm 150mm; /* 10 x 15 cm, portrait par défaut ; ignoré par endroits sur iPadOS */
+  margin: 0;
+}
+
+@page landscape {
+  size: 150mm 100mm;
+}
+
+@media print {
+  html, body {
+    width: 100% !important;
+    height: 100% !important;
+    margin: 0 !important;
+    padding: 0 !important;
+    overflow: visible !important;
+    background: #fff !important;
+    position: static !important;
+  }
+
+  /* On masque strictement toute l'interface de l'application */
+  #app,
+  .toast-root,
+  .modal {
+    display: none !important;
+  }
+
+  #print-root {
+    position: fixed !important;
+    inset: 0 !important;
+    z-index: auto !important;
+    opacity: 1 !important;
+    pointer-events: auto !important;
+    margin: 0 !important;
+    padding: 0 !important;
+    width: 100% !important;
+    height: 100% !important;
+    background: #fff !important;
+    display: block !important;
+    overflow: hidden;
+    box-shadow: none !important;
+    border: none !important;
+  }
+
+  .print-image {
+    display: block;
+    width: 100%;
+    height: 100%;
+    object-fit: cover; /* mode "remplir le papier" par défaut : jamais de bande blanche */
+    object-position: center;
+    box-shadow: none !important;
+    border: none !important;
+    border-radius: 0 !important;
+    -webkit-print-color-adjust: exact;
+    print-color-adjust: exact;
+  }
+
+  #print-root.mode-contain .print-image {
+    object-fit: contain;
+  }
+
+  #print-root.is-landscape {
+    page: landscape; /* pris en compte par certains moteurs, ignoré sans risque sinon */
+  }
+
+  /* Aucun texte, bouton ou élément de navigation ne doit apparaître */
+  a[href]::after { content: "" !important; }
+}

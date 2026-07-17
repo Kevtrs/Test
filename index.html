@@ -1,1183 +1,320 @@
 <!doctype html>
 <html lang="fr">
 <head>
-  <meta charset="utf-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover" />
-  <meta name="theme-color" content="#050810" />
-  <title>Mondial 26 Pronos</title>
-  <style>
-    :root{
-      --bg:#050810;
-      --bg-2:#07101f;
-      --card:#0b1324;
-      --card-2:#101b31;
-      --line:rgba(255,255,255,.105);
-      --line-strong:rgba(255,255,255,.18);
-      --text:#f7fbff;
-      --muted:#93a4bc;
-      --soft:#c7d2e2;
-      --blue:#009BDE;
-      --blue-2:#32c7ff;
-      --green:#25d97f;
-      --yellow:#ffd166;
-      --red:#ff4d6d;
-      --orange:#ff9f1c;
-      --shadow:0 18px 60px rgba(0,0,0,.34);
-      --radius:24px;
-      --radius-sm:16px;
-      --safe-top:env(safe-area-inset-top,0px);
-      --safe-bottom:env(safe-area-inset-bottom,0px);
-      --tap:46px;
-      --wrap:1120px;
-      --gap:14px;
-    }
+<meta charset="utf-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, minimum-scale=1, user-scalable=no, viewport-fit=cover" />
+<meta name="theme-color" content="#0a84b8" />
+<meta name="color-scheme" content="dark light" />
+<meta name="mobile-web-app-capable" content="yes" />
+<meta name="apple-mobile-web-app-capable" content="yes" />
+<meta name="apple-mobile-web-app-status-bar-style" content="black-translucent" />
+<meta name="apple-mobile-web-app-title" content="Photobooth" />
+<meta name="format-detection" content="telephone=no" />
+<meta name="description" content="Borne photo (photobooth) en libre-service, installable en PWA, impression AirPrint vers Canon SELPHY CP1500." />
+<title>Photobooth Événement</title>
 
-    *{box-sizing:border-box}
-    html{scroll-behavior:smooth;background:var(--bg)}
-    body{
-      margin:0;
-      min-height:100svh;
-      color:var(--text);
-      font-family:Inter, ui-sans-serif, system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Arial, sans-serif;
-      background:
-        radial-gradient(circle at 18% 0%, rgba(0,155,222,.20), transparent 34rem),
-        radial-gradient(circle at 92% 18%, rgba(37,217,127,.10), transparent 24rem),
-        linear-gradient(180deg, #050810 0%, #07101f 46%, #050810 100%);
-      -webkit-font-smoothing:antialiased;
-      text-rendering:optimizeLegibility;
-    }
+<link rel="manifest" href="manifest.json" />
+<link rel="icon" href="assets/icons/favicon-32.png" sizes="32x32" type="image/png" />
+<link rel="icon" href="assets/icons/favicon-16.png" sizes="16x16" type="image/png" />
+<link rel="apple-touch-icon" href="assets/icons/apple-touch-icon.png" />
 
-    button,input{font:inherit}
-    button{color:inherit}
-    a{color:inherit}
-
-    .app-shell{width:min(var(--wrap),100%);margin:0 auto;padding:calc(14px + var(--safe-top)) 14px calc(88px + var(--safe-bottom));}
-
-    .topbar{
-      position:sticky;
-      top:0;
-      z-index:30;
-      display:flex;
-      align-items:center;
-      justify-content:space-between;
-      gap:12px;
-      margin:-14px -14px 12px;
-      padding:calc(12px + var(--safe-top)) 14px 12px;
-      background:linear-gradient(180deg, rgba(5,8,16,.96), rgba(5,8,16,.78));
-      border-bottom:1px solid rgba(255,255,255,.08);
-      backdrop-filter:blur(18px);
-    }
-
-    .brand{display:flex;align-items:center;gap:11px;min-width:0}
-    .brand-mark{
-      width:42px;height:42px;border-radius:14px;
-      display:grid;place-items:center;
-      background:linear-gradient(135deg, var(--blue), #0865ff);
-      box-shadow:0 12px 34px rgba(0,155,222,.28), inset 0 1px 0 rgba(255,255,255,.3);
-      flex:0 0 auto;
-      font-weight:950;
-      letter-spacing:-.08em;
-    }
-    .brand-title{min-width:0}
-    h1{font-size:18px;line-height:1.05;margin:0;letter-spacing:-.04em;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
-    .brand-sub{margin-top:3px;font-size:12px;color:var(--muted);white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
-
-    .profile-chip{
-      min-height:var(--tap);
-      border:1px solid var(--line-strong);
-      background:rgba(255,255,255,.075);
-      border-radius:999px;
-      padding:6px 8px 6px 6px;
-      display:flex;align-items:center;gap:8px;
-      cursor:pointer;
-      -webkit-tap-highlight-color:transparent;
-      flex:0 0 auto;
-    }
-    .avatar,.mini-avatar{
-      display:grid;place-items:center;
-      border-radius:999px;
-      background:rgba(0,155,222,.18);
-      color:#fff;
-      font-weight:900;
-      border:1px solid rgba(255,255,255,.13);
-    }
-    .avatar{width:34px;height:34px;font-size:14px}
-    .mini-avatar{width:26px;height:26px;font-size:11px}
-    .profile-chip span:last-child{font-weight:800;font-size:13px;max-width:72px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
-
-    .hero{
-      display:grid;
-      gap:14px;
-      padding:18px;
-      border-radius:var(--radius);
-      border:1px solid rgba(255,255,255,.11);
-      background:
-        linear-gradient(135deg, rgba(255,255,255,.09), rgba(255,255,255,.03)),
-        rgba(11,19,36,.92);
-      box-shadow:var(--shadow);
-      overflow:hidden;
-      position:relative;
-    }
-    .hero:before{
-      content:"";
-      position:absolute;
-      inset:-1px;
-      pointer-events:none;
-      background:
-        linear-gradient(90deg, transparent 0 19px, rgba(255,255,255,.035) 20px 21px, transparent 22px 100%),
-        linear-gradient(0deg, transparent 0 19px, rgba(255,255,255,.028) 20px 21px, transparent 22px 100%);
-      background-size:42px 42px;
-      mask:linear-gradient(180deg, #000, transparent 70%);
-      opacity:.75;
-    }
-    .hero-main{position:relative;z-index:1;display:grid;gap:10px}
-    .eyebrow{font-size:12px;text-transform:uppercase;letter-spacing:.13em;color:var(--blue-2);font-weight:900}
-    .hero h2{font-size:clamp(32px,8vw,64px);line-height:.94;margin:0;letter-spacing:-.075em;max-width:820px}
-    .hero p{margin:0;color:var(--soft);font-size:15px;line-height:1.55;max-width:760px}
-    .hero-actions{position:relative;z-index:1;display:flex;gap:10px;flex-wrap:wrap}
-
-    .btn{
-      min-height:var(--tap);
-      border:1px solid var(--line-strong);
-      background:rgba(255,255,255,.075);
-      border-radius:15px;
-      padding:0 14px;
-      display:inline-flex;
-      align-items:center;
-      justify-content:center;
-      gap:9px;
-      font-weight:850;
-      cursor:pointer;
-      text-decoration:none;
-      -webkit-tap-highlight-color:transparent;
-      transition:transform .14s ease, border-color .14s ease, background .14s ease, opacity .14s ease;
-    }
-    .btn:active{transform:scale(.98)}
-    .btn.primary{background:linear-gradient(135deg, var(--blue), #0477ff);border-color:rgba(50,199,255,.7);box-shadow:0 12px 30px rgba(0,155,222,.22)}
-    .btn.ghost{background:rgba(255,255,255,.045)}
-    .btn.danger{background:rgba(255,77,109,.14);border-color:rgba(255,77,109,.34);color:#ffd5dd}
-    .btn[disabled]{opacity:.48;cursor:not-allowed}
-
-    .setup-card{
-      margin-top:14px;
-      border:1px solid rgba(255,209,102,.28);
-      background:rgba(255,209,102,.075);
-      border-radius:var(--radius-sm);
-      padding:14px;
-      display:none;
-      color:#ffe7aa;
-      line-height:1.48;
-    }
-    .setup-card.show{display:block}
-    .setup-card code{display:block;margin-top:10px;padding:12px;border-radius:12px;background:rgba(0,0,0,.28);overflow:auto;color:#fff;font-size:12px;line-height:1.5}
-
-    .grid-2{display:grid;gap:14px;margin-top:14px}
-    .panel{
-      border-radius:var(--radius);
-      border:1px solid var(--line);
-      background:rgba(11,19,36,.82);
-      box-shadow:0 12px 42px rgba(0,0,0,.18);
-      overflow:hidden;
-    }
-    .panel-head{display:flex;align-items:flex-end;justify-content:space-between;gap:10px;padding:16px 16px 8px}
-    .panel-title{margin:0;font-size:17px;letter-spacing:-.035em}
-    .panel-note{font-size:12px;color:var(--muted);white-space:nowrap}
-
-    .leaderboard{display:grid;gap:10px;padding:8px 12px 14px}
-    .rank-card{
-      display:grid;
-      grid-template-columns:auto 1fr auto;
-      gap:10px;
-      align-items:center;
-      border-radius:18px;
-      border:1px solid var(--line);
-      background:rgba(255,255,255,.055);
-      padding:12px;
-    }
-    .rank-pos{width:30px;height:30px;border-radius:10px;display:grid;place-items:center;background:rgba(255,255,255,.07);font-weight:950;color:var(--soft)}
-    .rank-name{display:flex;align-items:center;gap:9px;min-width:0}
-    .rank-name strong{font-size:15px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
-    .rank-meta{font-size:12px;color:var(--muted);margin-top:2px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
-    .rank-points{text-align:right;font-weight:950;font-size:22px;letter-spacing:-.05em}
-    .rank-points small{display:block;font-size:11px;color:var(--muted);letter-spacing:0;font-weight:800;margin-top:1px}
-    .rank-card.first{background:linear-gradient(135deg, rgba(0,155,222,.22), rgba(255,255,255,.06));border-color:rgba(50,199,255,.35)}
-
-    .stats-grid{display:grid;grid-template-columns:repeat(2,1fr);gap:10px;padding:8px 12px 14px}
-    .stat{
-      border-radius:18px;
-      border:1px solid var(--line);
-      background:rgba(255,255,255,.05);
-      padding:12px;
-      min-height:78px;
-    }
-    .stat strong{display:block;font-size:24px;line-height:1;letter-spacing:-.055em}
-    .stat span{display:block;margin-top:7px;color:var(--muted);font-size:12px;line-height:1.25}
-
-    .controls{
-      position:sticky;
-      top:calc(71px + var(--safe-top));
-      z-index:20;
-      margin:14px -14px 0;
-      padding:10px 14px 12px;
-      background:linear-gradient(180deg, rgba(5,8,16,.95), rgba(5,8,16,.78));
-      border-bottom:1px solid rgba(255,255,255,.075);
-      backdrop-filter:blur(18px);
-    }
-    .tabs{display:flex;gap:8px;overflow-x:auto;scrollbar-width:none;padding-bottom:2px}
-    .tabs::-webkit-scrollbar{display:none}
-    .tab{
-      min-height:42px;
-      border:1px solid var(--line);
-      background:rgba(255,255,255,.055);
-      color:var(--soft);
-      border-radius:999px;
-      padding:0 13px;
-      display:flex;
-      align-items:center;
-      gap:8px;
-      font-size:13px;
-      font-weight:850;
-      white-space:nowrap;
-      cursor:pointer;
-      -webkit-tap-highlight-color:transparent;
-    }
-    .tab.active{background:rgba(0,155,222,.20);border-color:rgba(50,199,255,.45);color:#fff}
-    .pill-count{font-size:11px;min-width:22px;height:22px;border-radius:999px;background:rgba(255,255,255,.10);display:grid;place-items:center;padding:0 6px;color:var(--text)}
-    .search-row{display:flex;gap:9px;margin-top:10px}
-    .search{
-      min-height:46px;
-      width:100%;
-      border:1px solid var(--line);
-      background:rgba(255,255,255,.055);
-      border-radius:15px;
-      padding:0 13px;
-      color:var(--text);
-      outline:none;
-    }
-    .search:focus{border-color:rgba(50,199,255,.5);box-shadow:0 0 0 3px rgba(0,155,222,.12)}
-
-    .match-list{display:grid;gap:14px;margin-top:14px}
-    .date-group{display:grid;gap:10px}
-    .date-title{
-      display:flex;align-items:center;justify-content:space-between;gap:10px;
-      color:var(--muted);
-      font-size:12px;
-      text-transform:uppercase;
-      letter-spacing:.11em;
-      font-weight:950;
-      padding:6px 2px 0;
-    }
-    .date-title:after{content:"";height:1px;background:var(--line);flex:1}
-
-    .match-card{
-      position:relative;
-      border:1px solid var(--line);
-      background:linear-gradient(180deg, rgba(255,255,255,.066), rgba(255,255,255,.036));
-      border-radius:var(--radius);
-      box-shadow:0 16px 44px rgba(0,0,0,.20);
-      overflow:hidden;
-    }
-    .match-card:before{content:"";position:absolute;left:0;right:0;top:0;height:3px;background:rgba(255,255,255,.10)}
-    .match-card.live:before{background:linear-gradient(90deg, var(--green), var(--blue-2))}
-    .match-card.finished:before{background:linear-gradient(90deg, var(--blue), rgba(255,255,255,.28))}
-    .match-card.locked:before{background:linear-gradient(90deg, var(--yellow), var(--orange))}
-
-    .match-inner{padding:14px;display:grid;gap:13px}
-    .match-top{display:flex;align-items:center;justify-content:space-between;gap:10px;color:var(--muted);font-size:12px;font-weight:800}
-    .status{
-      min-height:28px;
-      display:inline-flex;align-items:center;gap:7px;
-      border-radius:999px;
-      padding:0 9px;
-      border:1px solid var(--line);
-      background:rgba(255,255,255,.055);
-      color:var(--soft);
-      white-space:nowrap;
-    }
-    .status.live{color:#b9ffd8;border-color:rgba(37,217,127,.30);background:rgba(37,217,127,.10)}
-    .status.finished{color:#d8f2ff;border-color:rgba(0,155,222,.28);background:rgba(0,155,222,.10)}
-    .status.locked{color:#ffe5a1;border-color:rgba(255,209,102,.28);background:rgba(255,209,102,.10)}
-
-    .teams{display:grid;grid-template-columns:1fr auto 1fr;align-items:center;gap:10px}
-    .team{display:grid;gap:8px;min-width:0;text-align:left}
-    .team.away{text-align:right;justify-items:end}
-    .team-logo{
-      width:42px;height:42px;border-radius:999px;
-      background:rgba(255,255,255,.075);
-      border:1px solid var(--line);
-      display:grid;place-items:center;
-      overflow:hidden;
-      font-size:13px;
-      font-weight:950;
-      color:#fff;
-    }
-    .team-logo img{width:100%;height:100%;object-fit:contain;padding:5px}
-    .team-name{min-width:0}
-    .team-name strong{display:block;font-size:14px;line-height:1.08;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
-    .team-name span{display:block;margin-top:3px;color:var(--muted);font-size:11px;font-weight:850;letter-spacing:.08em}
-    .scorebox{display:grid;place-items:center;min-width:78px}
-    .score{
-      min-width:76px;
-      min-height:52px;
-      padding:0 10px;
-      border-radius:18px;
-      border:1px solid rgba(255,255,255,.16);
-      background:rgba(0,0,0,.18);
-      display:grid;place-items:center;
-      font-size:24px;
-      font-weight:950;
-      letter-spacing:-.055em;
-      white-space:nowrap;
-    }
-    .score small{font-size:12px;color:var(--muted);letter-spacing:0;font-weight:900}
-
-    .bet-box{
-      border-radius:18px;
-      border:1px solid var(--line);
-      background:rgba(0,0,0,.16);
-      padding:12px;
-      display:grid;
-      gap:11px;
-    }
-    .bet-head{display:flex;align-items:center;justify-content:space-between;gap:10px;font-size:13px;color:var(--soft);font-weight:850}
-    .played-count{color:var(--muted);font-size:12px;font-weight:800}
-    .bet-form{display:grid;grid-template-columns:1fr auto 1fr;gap:10px;align-items:center}
-    .score-input{
-      min-height:50px;
-      width:100%;
-      border:1px solid var(--line-strong);
-      background:rgba(255,255,255,.07);
-      border-radius:16px;
-      color:#fff;
-      font-size:24px;
-      font-weight:950;
-      text-align:center;
-      outline:none;
-      -moz-appearance:textfield;
-    }
-    .score-input::-webkit-outer-spin-button,.score-input::-webkit-inner-spin-button{-webkit-appearance:none;margin:0}
-    .score-input:focus{border-color:rgba(50,199,255,.55);box-shadow:0 0 0 3px rgba(0,155,222,.14)}
-    .dash{font-weight:950;color:var(--muted)}
-    .save-row{display:flex;gap:9px;align-items:center;justify-content:space-between;flex-wrap:wrap}
-    .save-row .btn{flex:1;min-width:170px}
-    .hint{font-size:12px;color:var(--muted);line-height:1.35}
-
-    .revealed{display:grid;gap:8px}
-    .prediction-row{
-      display:grid;
-      grid-template-columns:auto 1fr auto;
-      gap:9px;
-      align-items:center;
-      border-radius:15px;
-      background:rgba(255,255,255,.055);
-      border:1px solid rgba(255,255,255,.075);
-      padding:9px;
-    }
-    .prediction-row .name{font-size:13px;font-weight:900;min-width:0;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
-    .prediction-row .pred{font-size:16px;font-weight:950;letter-spacing:-.04em}
-    .prediction-row .pts{font-size:12px;color:var(--muted);font-weight:900;white-space:nowrap}
-    .prediction-row.me{border-color:rgba(50,199,255,.34);background:rgba(0,155,222,.10)}
-    .empty-state{
-      border:1px dashed rgba(255,255,255,.18);
-      border-radius:var(--radius);
-      padding:22px 16px;
-      text-align:center;
-      color:var(--muted);
-      background:rgba(255,255,255,.035);
-      line-height:1.45;
-    }
-    .empty-state strong{display:block;color:var(--text);font-size:18px;margin-bottom:6px;letter-spacing:-.035em}
-
-    .bottom-nav{
-      position:fixed;
-      left:50%;bottom:calc(12px + var(--safe-bottom));transform:translateX(-50%);
-      width:min(560px,calc(100% - 24px));
-      z-index:40;
-      display:grid;grid-template-columns:repeat(3,1fr);gap:8px;
-      padding:8px;
-      border:1px solid var(--line-strong);
-      border-radius:22px;
-      background:rgba(5,8,16,.86);
-      box-shadow:0 18px 60px rgba(0,0,0,.48);
-      backdrop-filter:blur(20px);
-    }
-    .bottom-nav button{min-height:48px;border:0;border-radius:16px;background:transparent;color:var(--muted);font-weight:900;cursor:pointer}
-    .bottom-nav button.active{background:rgba(0,155,222,.18);color:#fff}
-
-    .modal{
-      position:fixed;inset:0;z-index:100;
-      display:none;place-items:end center;
-      padding:16px 14px calc(16px + var(--safe-bottom));
-      background:rgba(0,0,0,.62);
-      backdrop-filter:blur(14px);
-    }
-    .modal.show{display:grid}
-    .modal-card{
-      width:min(560px,100%);
-      border-radius:28px;
-      border:1px solid var(--line-strong);
-      background:linear-gradient(180deg, rgba(16,27,49,.98), rgba(7,16,31,.98));
-      box-shadow:var(--shadow);
-      padding:18px;
-    }
-    .modal-card h3{margin:0;font-size:24px;letter-spacing:-.06em}
-    .modal-card p{margin:7px 0 16px;color:var(--muted);line-height:1.45}
-    .profile-grid{display:grid;gap:10px}
-    .profile-option{
-      min-height:68px;
-      border:1px solid var(--line);
-      background:rgba(255,255,255,.055);
-      border-radius:20px;
-      padding:10px;
-      display:grid;
-      grid-template-columns:auto 1fr auto;
-      gap:12px;
-      align-items:center;
-      cursor:pointer;
-      text-align:left;
-    }
-    .profile-option strong{display:block;font-size:16px}
-    .profile-option span{display:block;color:var(--muted);font-size:12px;margin-top:2px}
-    .profile-option .avatar{width:44px;height:44px}
-
-    .toast{
-      position:fixed;left:50%;bottom:calc(82px + var(--safe-bottom));transform:translateX(-50%) translateY(20px);
-      z-index:120;
-      width:min(520px,calc(100% - 24px));
-      border:1px solid var(--line-strong);
-      border-radius:18px;
-      background:rgba(5,8,16,.92);
-      box-shadow:0 18px 60px rgba(0,0,0,.45);
-      padding:12px 14px;
-      color:#fff;
-      opacity:0;
-      pointer-events:none;
-      transition:opacity .18s ease, transform .18s ease;
-      backdrop-filter:blur(16px);
-      font-weight:800;
-      line-height:1.35;
-    }
-    .toast.show{opacity:1;transform:translateX(-50%) translateY(0)}
-    .toast.error{border-color:rgba(255,77,109,.42);background:rgba(60,10,22,.92)}
-
-    .skeleton{position:relative;overflow:hidden;background:rgba(255,255,255,.06);border-radius:18px;min-height:130px}
-    .skeleton:after{content:"";position:absolute;inset:0;background:linear-gradient(90deg, transparent, rgba(255,255,255,.08), transparent);transform:translateX(-100%);animation:shine 1.25s infinite}
-    @keyframes shine{to{transform:translateX(100%)}}
-
-    @media (min-width:780px){
-      .app-shell{padding-left:22px;padding-right:22px}
-      .topbar{margin-left:-22px;margin-right:-22px;padding-left:22px;padding-right:22px}
-      .hero{grid-template-columns:1fr auto;align-items:end;padding:26px}
-      .grid-2{grid-template-columns:1.3fr .7fr}
-      .stats-grid{grid-template-columns:repeat(4,1fr)}
-      .controls{margin-left:0;margin-right:0;border:1px solid var(--line);border-radius:22px;top:86px}
-      .match-inner{padding:16px}
-      .team{grid-template-columns:auto 1fr;align-items:center}
-      .team.away{grid-template-columns:1fr auto}.team.away .team-logo{grid-column:2}.team.away .team-name{grid-column:1;grid-row:1}
-      .team-name strong{font-size:17px}.team-logo{width:50px;height:50px}.score{font-size:30px;min-width:96px;min-height:60px}
-      .modal{place-items:center}
-      .profile-grid{grid-template-columns:repeat(3,1fr)}
-      .profile-option{grid-template-columns:1fr;justify-items:center;text-align:center;padding:16px}.profile-option .avatar{width:56px;height:56px}
-    }
-
-    @media (prefers-reduced-motion:reduce){*,*:before,*:after{animation-duration:.01ms!important;animation-iteration-count:1!important;scroll-behavior:auto!important;transition:none!important}}
-  </style>
+<link rel="stylesheet" href="css/style.css" />
+<link rel="stylesheet" href="css/animations.css" />
+<link rel="stylesheet" href="css/print.css" media="print" />
 </head>
 <body>
-  <div class="app-shell" id="top">
-    <header class="topbar">
-      <div class="brand" aria-label="Mondial 26 Pronos">
-        <div class="brand-mark">26</div>
-        <div class="brand-title">
-          <h1>Mondial 26 Pronos</h1>
-          <div class="brand-sub" id="syncText">Initialisation…</div>
-        </div>
-      </div>
-      <button class="profile-chip" id="profileChip" type="button" aria-label="Changer de profil">
-        <span class="avatar" id="profileAvatar">?</span>
-        <span id="profileName">Profil</span>
+
+<!-- ===================== APPLICATION (masquée à l'impression) ===================== -->
+<div id="app" class="app">
+
+  <!-- Bandeau d'erreurs / notifications, toujours au-dessus -->
+  <div id="toast-root" class="toast-root" aria-live="polite"></div>
+
+  <!-- ============ ÉCRAN 1 : ACCUEIL ============ -->
+  <section id="screen-home" class="screen screen-home is-active" data-screen="home">
+    <div class="home-bg" id="home-bg" aria-hidden="true"></div>
+    <div class="home-veil" aria-hidden="true"></div>
+
+    <button id="admin-hotspot" class="admin-hotspot" type="button" aria-label="Zone administrateur" tabindex="-1">
+      <img id="home-logo" class="home-logo" src="assets/logos/logo-generic.png" alt="" />
+    </button>
+
+    <div class="home-content">
+      <h1 id="home-title" class="home-title">Votre Événement</h1>
+      <p id="home-subtitle" class="home-subtitle">Photobooth libre-service</p>
+      <p id="home-date" class="home-date"></p>
+
+      <button id="btn-start" class="btn-giant" type="button">
+        <span class="btn-giant-icon">📷</span>
+        <span class="btn-giant-label">Toucher pour commencer</span>
       </button>
+
+      <p class="home-hint">Photos et impressions gratuites</p>
+    </div>
+  </section>
+
+  <!-- ============ ÉCRAN 2 : CAMÉRA ============ -->
+  <section id="screen-camera" class="screen screen-camera" data-screen="camera" hidden>
+    <div class="camera-stage">
+      <video id="camera-video" class="camera-video" autoplay playsinline muted></video>
+      <div id="camera-flash" class="camera-flash" aria-hidden="true"></div>
+
+      <div id="camera-error" class="camera-error" hidden>
+        <div class="camera-error-icon">🚫</div>
+        <p id="camera-error-text" class="camera-error-text">La caméra n'est pas accessible.</p>
+        <button id="btn-camera-retry" class="btn-secondary" type="button">Réessayer</button>
+        <button id="btn-camera-cancel" class="btn-ghost" type="button">Retour à l'accueil</button>
+      </div>
+
+      <div id="countdown-overlay" class="countdown-overlay" hidden>
+        <div id="countdown-number" class="countdown-number">3</div>
+      </div>
+
+      <div id="camera-progress" class="camera-progress" hidden>
+        <span id="camera-progress-text">Photo 1 sur 3</span>
+      </div>
+
+      <div class="camera-topbar">
+        <button id="btn-camera-back" class="btn-round" type="button" aria-label="Annuler la séance">✕</button>
+        <button id="btn-sound-toggle" class="btn-round" type="button" aria-label="Activer / couper le son">🔊</button>
+      </div>
+
+      <div class="camera-bottombar">
+        <button id="btn-shoot" class="btn-shoot" type="button">
+          <span class="btn-shoot-ring"></span>
+        </button>
+        <p class="camera-hint">Placez-vous dans le cadre, puis touchez le bouton</p>
+      </div>
+    </div>
+  </section>
+
+  <!-- ============ ÉCRAN 3 : CRÉATION DU MONTAGE ============ -->
+  <section id="screen-composing" class="screen screen-composing" data-screen="composing" hidden>
+    <div class="composing-box">
+      <div class="spinner" aria-hidden="true"></div>
+      <p class="composing-text">Création de votre photo…</p>
+    </div>
+  </section>
+
+  <!-- ============ ÉCRAN 4 : APERÇU FINAL ============ -->
+  <section id="screen-preview" class="screen screen-preview" data-screen="preview" hidden>
+    <div class="preview-layout">
+      <div class="preview-canvas-wrap">
+        <img id="preview-image" class="preview-image" alt="Montage photo final" />
+      </div>
+      <div class="preview-panel">
+        <h2 class="preview-title">Votre photo est prête !</h2>
+
+        <div id="preview-copies" class="preview-copies">
+          <span class="preview-copies-label">Exemplaires suggérés</span>
+          <div class="preview-copies-buttons">
+            <button class="btn-copies" data-copies="1" type="button">1</button>
+            <button class="btn-copies" data-copies="2" type="button">2</button>
+          </div>
+          <p class="preview-copies-note">Le nombre définitif se confirme dans la fenêtre d'impression AirPrint.</p>
+        </div>
+
+        <button id="btn-print" class="btn-giant btn-giant-accent" type="button">
+          <span class="btn-giant-icon">🖨️</span>
+          <span class="btn-giant-label">Imprimer</span>
+        </button>
+        <button id="btn-retake" class="btn-secondary" type="button">↺ Refaire les photos</button>
+        <button id="btn-finish" class="btn-ghost" type="button">Terminer sans imprimer</button>
+      </div>
+    </div>
+  </section>
+
+  <!-- ============ ÉCRAN 5 : FIN ============ -->
+  <section id="screen-end" class="screen screen-end" data-screen="end" hidden>
+    <div class="end-box">
+      <div class="end-check">✔</div>
+      <h2 class="end-title">Merci !</h2>
+      <p class="end-sub">Retour à l'accueil dans <span id="end-countdown">5</span> s…</p>
+      <button id="btn-end-now" class="btn-secondary" type="button">Revenir maintenant</button>
+    </div>
+  </section>
+
+  <!-- ============ MODALE PIN ADMIN ============ -->
+  <div id="modal-pin" class="modal" hidden>
+    <div class="modal-box modal-pin-box">
+      <h2 class="modal-title">Accès administrateur</h2>
+      <p class="modal-sub">Saisissez le code PIN</p>
+      <div id="pin-dots" class="pin-dots">
+        <span class="pin-dot"></span><span class="pin-dot"></span><span class="pin-dot"></span><span class="pin-dot"></span>
+      </div>
+      <div id="pin-error" class="pin-error" hidden>Code incorrect</div>
+      <div class="pin-pad">
+        <button class="pin-key" data-key="1" type="button">1</button>
+        <button class="pin-key" data-key="2" type="button">2</button>
+        <button class="pin-key" data-key="3" type="button">3</button>
+        <button class="pin-key" data-key="4" type="button">4</button>
+        <button class="pin-key" data-key="5" type="button">5</button>
+        <button class="pin-key" data-key="6" type="button">6</button>
+        <button class="pin-key" data-key="7" type="button">7</button>
+        <button class="pin-key" data-key="8" type="button">8</button>
+        <button class="pin-key" data-key="9" type="button">9</button>
+        <button class="pin-key pin-key-ghost" data-key="cancel" type="button">Annuler</button>
+        <button class="pin-key" data-key="0" type="button">0</button>
+        <button class="pin-key pin-key-ghost" data-key="back" type="button">⌫</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- ============ PANNEAU ADMINISTRATEUR ============ -->
+  <section id="screen-admin" class="screen screen-admin" data-screen="admin" hidden>
+    <header class="admin-header">
+      <h1>Administration</h1>
+      <button id="btn-admin-close" class="btn-secondary" type="button">Fermer et revenir à l'accueil</button>
     </header>
 
-    <section class="hero" aria-labelledby="heroTitle">
-      <div class="hero-main">
-        <div class="eyebrow">Coupe du Monde 2026 · Kevin vs Myriam vs Hervé</div>
-        <h2 id="heroTitle">Pronos cachés, classement en direct.</h2>
-        <p>Tu pronostiques avant le coup d’envoi. Les scores des autres restent cachés jusqu’à ce que tout le monde ait joué ou que le match démarre.</p>
-      </div>
-      <div class="hero-actions">
-        <button class="btn primary" id="mainRefresh" type="button">↻ Actualiser</button>
-        <button class="btn ghost" id="jumpToMatches" type="button">Voir les matchs</button>
-      </div>
-    </section>
+    <nav class="admin-tabs" id="admin-tabs">
+      <button class="admin-tab is-active" data-tab="general" type="button">Général</button>
+      <button class="admin-tab" data-tab="apparence" type="button">Apparence</button>
+      <button class="admin-tab" data-tab="photos" type="button">Photos</button>
+      <button class="admin-tab" data-tab="impression" type="button">Impression</button>
+      <button class="admin-tab" data-tab="calibration" type="button">Calibration</button>
+      <button class="admin-tab" data-tab="galerie" type="button">Galerie</button>
+      <button class="admin-tab" data-tab="stockage" type="button">Stockage</button>
+    </nav>
 
-    <div class="setup-card" id="setupCard">
-      Firebase n’est pas encore configuré dans ce fichier. L’app fonctionne en mode local pour tester le design, mais les pronos ne seront pas partagés entre téléphones.
-      <code>Dans index.html, remplace firebaseConfig par la config Web de ton projet Firebase.</code>
+    <div class="admin-content">
+
+      <!-- Général -->
+      <div class="admin-panel is-active" data-panel="general">
+        <div class="field-grid">
+          <label class="field"><span>Nom de l'événement</span><input id="set-eventName" type="text" maxlength="60" /></label>
+          <label class="field"><span>Sous-titre</span><input id="set-eventSubtitle" type="text" maxlength="80" /></label>
+          <label class="field"><span>Date de l'événement</span><input id="set-eventDate" type="date" /></label>
+          <label class="field"><span>Message personnalisé (sur le montage)</span><input id="set-customMessage" type="text" maxlength="80" /></label>
+          <label class="field field-check"><input id="set-soundEnabled" type="checkbox" /><span>Activer les sons</span></label>
+          <label class="field field-check"><input id="set-flashEnabled" type="checkbox" /><span>Activer le flash blanc à l'écran</span></label>
+          <label class="field field-check"><input id="set-saveLocalPhotos" type="checkbox" /><span>Conserver les photos dans la galerie locale</span></label>
+          <label class="field field-check"><input id="set-autoReturnHome" type="checkbox" /><span>Retour automatique à l'accueil</span></label>
+          <label class="field"><span>Durée écran de fin (secondes)</span><input id="set-finalScreenDuration" type="number" min="3" max="60" /></label>
+          <label class="field"><span>Délai d'inactivité avant annulation (secondes)</span><input id="set-inactivityTimeout" type="number" min="15" max="600" /></label>
+        </div>
+      </div>
+
+      <!-- Apparence -->
+      <div class="admin-panel" data-panel="apparence">
+        <div class="field-grid">
+          <label class="field"><span>Thème</span>
+            <select id="set-theme">
+              <option value="generic">Générique élégant</option>
+              <option value="sarah18">Sarah – 18 ans</option>
+            </select>
+          </label>
+          <label class="field"><span>Couleur principale</span><input id="set-primaryColor" type="color" /></label>
+          <label class="field"><span>Couleur secondaire</span><input id="set-secondaryColor" type="color" /></label>
+          <label class="field"><span>Orientation du montage</span>
+            <select id="set-orientation">
+              <option value="landscape">Paysage (1800×1200)</option>
+              <option value="portrait">Portrait (1200×1800)</option>
+            </select>
+          </label>
+          <label class="field field-file"><span>Image d'accueil (fond)</span><input id="set-homeImage" type="file" accept="image/*" /></label>
+          <label class="field field-file"><span>Logo</span><input id="set-logo" type="file" accept="image/*" /></label>
+          <label class="field field-file"><span>Cadre PNG (transparent, appliqué sur le montage)</span><input id="set-frame" type="file" accept="image/png" /></label>
+        </div>
+        <div class="admin-preview-row">
+          <div class="admin-preview-item"><span>Fond</span><img id="prev-homeImage" alt="" /></div>
+          <div class="admin-preview-item"><span>Logo</span><img id="prev-logo" alt="" /></div>
+          <div class="admin-preview-item"><span>Cadre</span><img id="prev-frame" alt="" /></div>
+        </div>
+      </div>
+
+      <!-- Photos -->
+      <div class="admin-panel" data-panel="photos">
+        <div class="field-grid">
+          <label class="field"><span>Disposition du montage</span>
+            <select id="set-layout">
+              <option value="single">Une grande photo</option>
+              <option value="duo">Deux photos côte à côte</option>
+              <option value="grid4">Quatre photos (grille 2×2)</option>
+              <option value="strip3">Trois photos verticales (photomaton)</option>
+            </select>
+          </label>
+          <label class="field"><span>Nombre de photos à prendre</span><input id="set-photoCount" type="number" min="1" max="6" /></label>
+          <label class="field"><span>Durée du compte à rebours (secondes)</span><input id="set-countdownDuration" type="number" min="1" max="10" /></label>
+          <label class="field"><span>Délai entre les photos (secondes)</span><input id="set-delayBetweenPhotos" type="number" min="1" max="10" /></label>
+        </div>
+      </div>
+
+      <!-- Impression -->
+      <div class="admin-panel" data-panel="impression">
+        <div class="field-grid">
+          <label class="field field-check"><input id="set-printingEnabled" type="checkbox" /><span>Impression activée</span></label>
+          <label class="field field-check"><input id="set-autoPrint" type="checkbox" /><span>Lancer l'impression automatiquement (sans toucher « Imprimer »)</span></label>
+          <label class="field"><span>Nombre de copies suggéré</span><input id="set-copiesSuggested" type="number" min="1" max="9" /></label>
+        </div>
+        <p class="admin-note">Le bouton « Imprimer » ouvre directement la fenêtre système de choix d'imprimante (« Options ») : l'invité n'a qu'à toucher l'imprimante Canon SELPHY CP1500 puis « Imprimer », sans étape intermédiaire à comprendre. Pour des raisons de sécurité d'iPadOS, une web-app ne peut jamais envoyer une impression 100&nbsp;% silencieuse : c'est une protection système d'Apple, identique pour tous les sites et toutes les PWA. Avec « Lancer l'impression automatiquement », cette fenêtre s'ouvre toute seule dès que la photo est prête — il reste uniquement l'appui final sur « Imprimer », qu'aucune application web ne peut supprimer.</p>
+      </div>
+
+      <!-- Calibration -->
+      <div class="admin-panel" data-panel="calibration">
+        <div class="field-grid">
+          <label class="field"><span>Zoom (90–110 %)</span><input id="cal-zoom" type="range" min="90" max="110" step="1" /></label>
+          <label class="field"><span>Décalage horizontal (px)</span><input id="cal-offsetX" type="range" min="-60" max="60" step="1" /></label>
+          <label class="field"><span>Décalage vertical (px)</span><input id="cal-offsetY" type="range" min="-60" max="60" step="1" /></label>
+          <label class="field"><span>Mode</span>
+            <select id="cal-fillMode">
+              <option value="fill">Remplir le papier (peut rogner)</option>
+              <option value="contain">Conserver toute l'image</option>
+            </select>
+          </label>
+          <label class="field"><span>Rotation papier</span>
+            <select id="cal-rotation">
+              <option value="landscape">Paysage</option>
+              <option value="portrait">Portrait</option>
+            </select>
+          </label>
+        </div>
+        <button id="btn-cal-test" class="btn-secondary" type="button">Aperçu d'impression test</button>
+        <button id="btn-cal-reset" class="btn-ghost" type="button">Réinitialiser la calibration</button>
+      </div>
+
+      <!-- Galerie -->
+      <div class="admin-panel" data-panel="galerie">
+        <div class="gallery-toolbar">
+          <button id="btn-gallery-export" class="btn-secondary" type="button">Exporter la galerie</button>
+          <button id="btn-gallery-clear" class="btn-danger" type="button">Supprimer toutes les photos</button>
+        </div>
+        <div id="gallery-grid" class="gallery-grid"></div>
+        <p id="gallery-empty" class="admin-note" hidden>Aucune session enregistrée pour le moment.</p>
+      </div>
+
+      <!-- Stockage -->
+      <div class="admin-panel" data-panel="stockage">
+        <div class="field-grid">
+          <label class="field"><span>Nombre maximum de sessions conservées</span><input id="set-maxSessions" type="number" min="10" max="500" /></label>
+          <label class="field"><span>Nouveau code PIN administrateur</span><input id="set-adminPin" type="text" inputmode="numeric" pattern="[0-9]*" maxlength="8" /></label>
+        </div>
+        <div id="storage-usage" class="storage-usage"></div>
+        <div class="admin-danger-zone">
+          <button id="btn-reset-all" class="btn-danger" type="button">Réinitialisation complète de l'application</button>
+        </div>
+      </div>
+
     </div>
+  </section>
 
-    <section class="grid-2" aria-label="Résumé">
-      <div class="panel" id="rankingPanel">
-        <div class="panel-head">
-          <h2 class="panel-title">Classement</h2>
-          <span class="panel-note" id="rankingNote">0 match fini</span>
-        </div>
-        <div class="leaderboard" id="leaderboard"></div>
-      </div>
-      <div class="panel">
-        <div class="panel-head">
-          <h2 class="panel-title">Résumé</h2>
-          <span class="panel-note" id="lastRefresh">—</span>
-        </div>
-        <div class="stats-grid" id="statsGrid"></div>
-      </div>
-    </section>
+</div>
 
-    <section class="controls" id="matches" aria-label="Filtres des matchs">
-      <div class="tabs" id="tabs"></div>
-      <div class="search-row">
-        <input class="search" id="searchInput" type="search" placeholder="Rechercher une équipe…" autocomplete="off" />
-        <button class="btn ghost" id="clearSearch" type="button" aria-label="Effacer la recherche">×</button>
-      </div>
-    </section>
+<!-- ===================== ZONE D'IMPRESSION (visible uniquement à l'impression) ===================== -->
+<div id="print-root" class="print-root">
+  <img id="print-image" class="print-image" alt="Montage à imprimer" />
+</div>
 
-    <main class="match-list" id="matchList" aria-live="polite">
-      <div class="skeleton"></div>
-      <div class="skeleton"></div>
-      <div class="skeleton"></div>
-    </main>
-  </div>
-
-  <nav class="bottom-nav" aria-label="Navigation rapide">
-    <button type="button" data-jump="top" class="active">Accueil</button>
-    <button type="button" data-jump="rankingPanel">Classement</button>
-    <button type="button" data-jump="matches">Matchs</button>
-  </nav>
-
-  <div class="modal" id="profileModal" role="dialog" aria-modal="true" aria-labelledby="profileTitle">
-    <div class="modal-card">
-      <h3 id="profileTitle">Qui pronostique ?</h3>
-      <p>Choisis ton profil. Il sera gardé sur ce téléphone.</p>
-      <div class="profile-grid" id="profileGrid"></div>
-    </div>
-  </div>
-
-  <div class="toast" id="toast" role="status" aria-live="polite"></div>
-
-  <script type="module">
-    import { initializeApp } from "https://www.gstatic.com/firebasejs/10.12.5/firebase-app.js";
-    import { getFirestore, collection, doc, setDoc, onSnapshot, serverTimestamp } from "https://www.gstatic.com/firebasejs/10.12.5/firebase-firestore.js";
-
-    /*
-      1) Crée une app Web dans Firebase.
-      2) Colle ici la config donnée par Firebase.
-      3) Active Firestore.
-      4) Pour votre usage privé entre 3 personnes, règles publiques possibles :
-
-      rules_version = '2';
-      service cloud.firestore {
-        match /databases/{database}/documents {
-          match /{document=**} {
-            allow read, write: if true;
-          }
-        }
-      }
-    */
-    const firebaseConfig = {
-      apiKey: "",
-      authDomain: "",
-      projectId: "",
-      storageBucket: "",
-      messagingSenderId: "",
-      appId: ""
-    };
-
-    const USERS = [
-      { id: "kevin", name: "Kevin", short: "K", note: "Profil sauvegardé sur ce téléphone" },
-      { id: "myriam", name: "Myriam", short: "M", note: "Profil sauvegardé sur ce téléphone" },
-      { id: "herve", name: "Hervé", short: "H", note: "Profil sauvegardé sur ce téléphone" }
-    ];
-
-    const ESPN_BASE = "https://site.api.espn.com/apis/site/v2/sports/soccer/fifa.world/scoreboard";
-    const ESPN_ENDPOINTS = [
-      ESPN_BASE,
-      `${ESPN_BASE}?dates=20260611-20260630`,
-      `${ESPN_BASE}?dates=20260701-20260719`
-    ];
-
-    const FILTERS = [
-      { id:"open", label:"À pronostiquer" },
-      { id:"live", label:"Live" },
-      { id:"next", label:"À venir" },
-      { id:"finished", label:"Terminés" },
-      { id:"mine", label:"Mes pronos" },
-      { id:"all", label:"Tous" }
-    ];
-
-    const state = {
-      db: null,
-      firebaseReady: false,
-      currentUser: localStorage.getItem("mondial26_profile") || "",
-      activeFilter: localStorage.getItem("mondial26_filter") || "open",
-      matches: [],
-      predictions: loadLocalPredictions(),
-      results: {},
-      loading: true,
-      lastRefreshAt: null,
-      search: "",
-      timer: null
-    };
-
-    const $ = (id) => document.getElementById(id);
-    const els = {
-      syncText: $("syncText"), profileChip: $("profileChip"), profileAvatar: $("profileAvatar"), profileName: $("profileName"),
-      profileModal: $("profileModal"), profileGrid: $("profileGrid"), setupCard: $("setupCard"), leaderboard: $("leaderboard"),
-      statsGrid: $("statsGrid"), rankingNote: $("rankingNote"), lastRefresh: $("lastRefresh"), tabs: $("tabs"),
-      searchInput: $("searchInput"), clearSearch: $("clearSearch"), matchList: $("matchList"), toast: $("toast"),
-      mainRefresh: $("mainRefresh"), jumpToMatches: $("jumpToMatches")
-    };
-
-    boot();
-
-    function boot(){
-      renderProfileOptions();
-      bindEvents();
-      updateProfileUI();
-      setupFirebase();
-      render();
-      if(!state.currentUser) openProfileModal();
-      fetchMatches();
-      state.timer = setInterval(fetchMatches, 30000);
-    }
-
-    function bindEvents(){
-      els.profileChip.addEventListener("click", openProfileModal);
-      els.mainRefresh.addEventListener("click", fetchMatches);
-      els.jumpToMatches.addEventListener("click", () => scrollToId("matches"));
-      els.searchInput.addEventListener("input", (e) => { state.search = e.target.value.trim().toLowerCase(); renderMatches(); });
-      els.clearSearch.addEventListener("click", () => { state.search = ""; els.searchInput.value = ""; renderMatches(); });
-      els.tabs.addEventListener("click", (e) => {
-        const btn = e.target.closest("[data-filter]");
-        if(!btn) return;
-        state.activeFilter = btn.dataset.filter;
-        localStorage.setItem("mondial26_filter", state.activeFilter);
-        renderTabs(); renderMatches();
-      });
-      els.matchList.addEventListener("click", onMatchClick);
-      document.querySelector(".bottom-nav").addEventListener("click", (e) => {
-        const btn = e.target.closest("[data-jump]");
-        if(!btn) return;
-        document.querySelectorAll(".bottom-nav button").forEach(b => b.classList.toggle("active", b === btn));
-        scrollToId(btn.dataset.jump);
-      });
-    }
-
-    function setupFirebase(){
-      const valid = Boolean(firebaseConfig.apiKey && firebaseConfig.projectId && !firebaseConfig.apiKey.includes("TON_") && firebaseConfig.apiKey.length > 10);
-      if(!valid){
-        state.firebaseReady = false;
-        els.setupCard.classList.add("show");
-        setSync("Mode local · Firebase à configurer");
-        return;
-      }
-      try{
-        const app = initializeApp(firebaseConfig);
-        state.db = getFirestore(app);
-        state.firebaseReady = true;
-        els.setupCard.classList.remove("show");
-        setSync("Connexion Firestore…");
-        onSnapshot(collection(state.db, "predictions"), (snap) => {
-          const next = {};
-          snap.forEach((d) => {
-            const p = d.data();
-            if(!p || !p.matchId || !p.userId) return;
-            next[`${String(p.matchId)}_${String(p.userId)}`] = {
-              matchId: String(p.matchId), userId: String(p.userId), home: Number(p.home), away: Number(p.away), ts: p.ts || null
-            };
-          });
-          state.predictions = next;
-          setSync("Synchronisé en direct");
-          render();
-        }, (err) => {
-          console.error(err);
-          toast("Erreur Firestore predictions. Vérifie les règles.", true);
-          setSync("Erreur Firestore");
-        });
-        onSnapshot(collection(state.db, "results"), (snap) => {
-          const next = {};
-          snap.forEach((d) => {
-            const r = d.data();
-            if(r && Number.isFinite(Number(r.home)) && Number.isFinite(Number(r.away))) {
-              next[String(d.id)] = { home: Number(r.home), away: Number(r.away) };
-            }
-          });
-          state.results = next;
-          render();
-        }, (err) => console.warn("results snapshot", err));
-      }catch(err){
-        console.error(err);
-        state.firebaseReady = false;
-        els.setupCard.classList.add("show");
-        setSync("Firebase non initialisé");
-        toast("Firebase n’a pas démarré. L’app reste en mode local.", true);
-      }
-    }
-
-    async function fetchMatches(){
-      state.loading = state.matches.length === 0;
-      renderMatches();
-      try{
-        const calls = ESPN_ENDPOINTS.map(url => fetch(url, { cache:"no-store" }).then(r => {
-          if(!r.ok) throw new Error(`${r.status} ${r.statusText}`);
-          return r.json();
-        }));
-        const settled = await Promise.allSettled(calls);
-        const map = new Map();
-        settled.forEach((res) => {
-          if(res.status !== "fulfilled") return;
-          const events = Array.isArray(res.value?.events) ? res.value.events : [];
-          events.forEach((ev) => {
-            const match = normalizeEvent(ev);
-            if(match?.id) map.set(match.id, match);
-          });
-        });
-        state.matches = Array.from(map.values()).sort((a,b) => new Date(a.utcDate) - new Date(b.utcDate));
-        state.lastRefreshAt = new Date();
-        state.loading = false;
-        if(state.matches.length === 0){
-          setSync(state.firebaseReady ? "Firestore OK · ESPN vide" : "Mode local · ESPN vide");
-        }else{
-          setSync(state.firebaseReady ? "Synchronisé en direct" : "Mode local · Firebase à configurer");
-        }
-        render();
-      }catch(err){
-        console.error(err);
-        state.loading = false;
-        setSync("ESPN indisponible");
-        toast("Impossible de récupérer les matchs ESPN pour l’instant.", true);
-        render();
-      }
-    }
-
-    function normalizeEvent(ev){
-      const comp = ev?.competitions?.[0] || {};
-      const competitors = comp.competitors || [];
-      const homeC = competitors.find(c => c.homeAway === "home") || competitors[0];
-      const awayC = competitors.find(c => c.homeAway === "away") || competitors[1];
-      if(!homeC || !awayC) return null;
-      const type = comp.status?.type || ev.status?.type || {};
-      const name = String(type.name || type.id || "").toUpperCase();
-      const stateName = String(type.state || "").toLowerCase();
-      let status = "TIMED";
-      if(stateName === "post" || name === "STATUS_FINAL" || name === "FINAL") status = "FINISHED";
-      else if(stateName === "in" || ["STATUS_IN_PROGRESS","STATUS_HALFTIME","STATUS_EXTRA_TIME","STATUS_PENALTY","STATUS_SHOOTOUT","IN_PROGRESS","HALFTIME","EXTRA_TIME","PENALTY","SHOOTOUT"].includes(name)) status = "IN_PLAY";
-      const homeScore = parseScore(homeC.score);
-      const awayScore = parseScore(awayC.score);
-      return {
-        id: String(ev.id),
-        utcDate: ev.date || comp.date || "",
-        status,
-        statusName: type.shortDetail || type.detail || labelStatus(status),
-        venue: comp.venue?.fullName || ev.venue?.fullName || "",
-        home: normalizeTeam(homeC),
-        away: normalizeTeam(awayC),
-        homeScore,
-        awayScore
-      };
-    }
-
-    function normalizeTeam(c){
-      const t = c.team || {};
-      return {
-        abbr: t.abbreviation || t.shortDisplayName || t.name || "—",
-        name: t.displayName || t.name || t.shortDisplayName || "Équipe",
-        logo: t.logo || (Array.isArray(t.logos) ? t.logos[0]?.href : "") || ""
-      };
-    }
-
-    function parseScore(v){
-      const n = parseInt(v,10);
-      return Number.isFinite(n) ? n : null;
-    }
-
-    function render(){
-      updateProfileUI();
-      renderLeaderboard();
-      renderStats();
-      renderTabs();
-      renderMatches();
-    }
-
-    function renderLeaderboard(){
-      const scores = computeScores();
-      const finished = state.matches.filter(m => getFinalResult(m)).length;
-      els.rankingNote.textContent = `${finished} match${finished>1?"s":""} fini${finished>1?"s":""}`;
-      els.leaderboard.innerHTML = scores.map((s, idx) => `
-        <div class="rank-card ${idx===0 ? "first" : ""}">
-          <div class="rank-pos">${idx+1}</div>
-          <div class="rank-name">
-            <span class="mini-avatar">${escapeHtml(userById(s.userId)?.short || "?")}</span>
-            <div>
-              <strong>${escapeHtml(userById(s.userId)?.name || s.userId)}</strong>
-              <div class="rank-meta">${s.played} joué${s.played>1?"s":""} · ${s.exacts} exact${s.exacts>1?"s":""} · ${s.draws} nul${s.draws>1?"s":""} · ${s.winners} vainqueur${s.winners>1?"s":""}</div>
-            </div>
-          </div>
-          <div class="rank-points">${s.points}<small>pts</small></div>
-        </div>
-      `).join("");
-    }
-
-    function renderStats(){
-      const total = state.matches.length;
-      const live = state.matches.filter(m => m.status === "IN_PLAY").length;
-      const finished = state.matches.filter(m => getFinalResult(m)).length;
-      const open = state.matches.filter(m => !isRevealed(m)).length;
-      const mine = state.matches.filter(m => getPrediction(m.id, state.currentUser)).length;
-      els.lastRefresh.textContent = state.lastRefreshAt ? formatTime(state.lastRefreshAt) : "—";
-      els.statsGrid.innerHTML = `
-        <div class="stat"><strong>${total}</strong><span>matchs chargés</span></div>
-        <div class="stat"><strong>${open}</strong><span>encore jouables</span></div>
-        <div class="stat"><strong>${live}</strong><span>en direct</span></div>
-        <div class="stat"><strong>${mine}</strong><span>mes pronos</span></div>
-      `;
-    }
-
-    function renderTabs(){
-      const counts = {
-        open: state.matches.filter(m => !isRevealed(m)).length,
-        live: state.matches.filter(m => m.status === "IN_PLAY").length,
-        next: state.matches.filter(m => m.status === "TIMED").length,
-        finished: state.matches.filter(m => getFinalResult(m)).length,
-        mine: state.matches.filter(m => getPrediction(m.id, state.currentUser)).length,
-        all: state.matches.length
-      };
-      els.tabs.innerHTML = FILTERS.map(f => `
-        <button class="tab ${state.activeFilter === f.id ? "active" : ""}" type="button" data-filter="${f.id}">
-          ${f.label}<span class="pill-count">${counts[f.id] || 0}</span>
-        </button>
-      `).join("");
-    }
-
-    function renderMatches(){
-      if(state.loading){
-        els.matchList.innerHTML = `<div class="skeleton"></div><div class="skeleton"></div><div class="skeleton"></div>`;
-        return;
-      }
-      const list = filterMatches();
-      if(list.length === 0){
-        els.matchList.innerHTML = `
-          <div class="empty-state">
-            <strong>Aucun match à afficher</strong>
-            ${state.matches.length === 0 ? "ESPN ne renvoie aucun match pour le moment, ou la compétition n’est pas encore publiée." : "Essaie un autre filtre ou vide la recherche."}
-          </div>`;
-        return;
-      }
-      const groups = groupByDay(list);
-      els.matchList.innerHTML = groups.map(group => `
-        <section class="date-group">
-          <div class="date-title"><span>${escapeHtml(group.label)}</span></div>
-          ${group.items.map(renderMatchCard).join("")}
-        </section>
-      `).join("");
-    }
-
-    function renderMatchCard(match){
-      const revealed = isRevealed(match);
-      const finalResult = getFinalResult(match);
-      const my = getPrediction(match.id, state.currentUser);
-      const playedCount = USERS.filter(u => getPrediction(match.id, u.id)).length;
-      const cardStatus = match.status === "IN_PLAY" ? "live" : finalResult ? "finished" : revealed ? "locked" : "";
-      const scoreLabel = (match.status === "IN_PLAY" || finalResult) && match.homeScore !== null && match.awayScore !== null
-        ? `${match.homeScore} - ${match.awayScore}`
-        : revealed ? `<small>Verrouillé</small>` : `<small>VS</small>`;
-      const canEdit = Boolean(state.currentUser && !revealed);
-      return `
-        <article class="match-card ${cardStatus}" data-match-card="${escapeAttr(match.id)}">
-          <div class="match-inner">
-            <div class="match-top">
-              <span class="status ${cardStatus}">${statusDot(match)} ${escapeHtml(labelStatus(match.status, revealed))}</span>
-              <span>${escapeHtml(formatDate(match.utcDate))}</span>
-            </div>
-
-            <div class="teams">
-              ${teamBlock(match.home, "home")}
-              <div class="scorebox"><div class="score">${scoreLabel}</div></div>
-              ${teamBlock(match.away, "away")}
-            </div>
-
-            ${match.venue ? `<div class="hint">📍 ${escapeHtml(match.venue)}</div>` : ""}
-
-            <div class="bet-box">
-              <div class="bet-head">
-                <span>${revealed ? "Pronos révélés" : my ? "Ton prono est enregistré" : "Ton prono"}</span>
-                <span class="played-count">${playedCount}/3 joueurs</span>
-              </div>
-              ${canEdit ? renderBetForm(match, my) : renderLockedPrediction(match, my, revealed)}
-              ${renderRevealedRows(match, revealed, finalResult)}
-            </div>
-          </div>
-        </article>
-      `;
-    }
-
-    function teamBlock(team, side){
-      return `
-        <div class="team ${side === "away" ? "away" : ""}">
-          <div class="team-logo">${team.logo ? `<img src="${escapeAttr(team.logo)}" alt="" loading="lazy" />` : escapeHtml(team.abbr.slice(0,3))}</div>
-          <div class="team-name"><strong>${escapeHtml(team.name)}</strong><span>${escapeHtml(team.abbr)}</span></div>
-        </div>`;
-    }
-
-    function renderBetForm(match, my){
-      const home = Number.isFinite(my?.home) ? my.home : "";
-      const away = Number.isFinite(my?.away) ? my.away : "";
-      const label = my ? "Modifier mon prono" : "Enregistrer mon prono";
-      return `
-        <div class="bet-form">
-          <input class="score-input" inputmode="numeric" pattern="[0-9]*" min="0" max="30" type="number" value="${escapeAttr(home)}" aria-label="Score ${escapeAttr(match.home.name)}" data-home-input="${escapeAttr(match.id)}" />
-          <span class="dash">-</span>
-          <input class="score-input" inputmode="numeric" pattern="[0-9]*" min="0" max="30" type="number" value="${escapeAttr(away)}" aria-label="Score ${escapeAttr(match.away.name)}" data-away-input="${escapeAttr(match.id)}" />
-        </div>
-        <div class="save-row">
-          <button class="btn primary" type="button" data-save="${escapeAttr(match.id)}">${label}</button>
-          <div class="hint">Modifiable jusqu’à révélation.</div>
-        </div>`;
-    }
-
-    function renderLockedPrediction(match, my, revealed){
-      if(my){
-        return `<div class="prediction-row me"><span class="mini-avatar">${escapeHtml(userById(state.currentUser)?.short || "?")}</span><span class="name">Ton prono</span><span class="pred">${my.home} - ${my.away}</span></div>`;
-      }
-      return `<div class="hint">${revealed ? "Tu n’as pas joué ce match avant le verrouillage." : "Choisis un profil pour pronostiquer."}</div>`;
-    }
-
-    function renderRevealedRows(match, revealed, finalResult){
-      if(!revealed){
-        return `<div class="hint">🔒 Les pronos des autres restent cachés pour l’instant.</div>`;
-      }
-      return `<div class="revealed">
-        ${USERS.map(u => {
-          const p = getPrediction(match.id, u.id);
-          const pts = p && finalResult ? pointsFor(p, finalResult) : null;
-          return `<div class="prediction-row ${u.id === state.currentUser ? "me" : ""}">
-            <span class="mini-avatar">${escapeHtml(u.short)}</span>
-            <span class="name">${escapeHtml(u.name)}</span>
-            <span class="pred">${p ? `${p.home} - ${p.away}` : "—"}</span>
-            <span class="pts">${pts === null ? "" : `+${pts} pt${pts>1?"s":""}`}</span>
-          </div>`;
-        }).join("")}
-      </div>`;
-    }
-
-    async function onMatchClick(e){
-      const saveBtn = e.target.closest("[data-save]");
-      if(!saveBtn) return;
-      const matchId = String(saveBtn.dataset.save);
-      const match = state.matches.find(m => m.id === matchId);
-      if(!match) return;
-      if(!state.currentUser){ openProfileModal(); return; }
-      if(isRevealed(match)){ toast("Ce match est verrouillé, tu ne peux plus modifier le prono.", true); render(); return; }
-      const homeEl = document.querySelector(`[data-home-input="${cssEscape(matchId)}"]`);
-      const awayEl = document.querySelector(`[data-away-input="${cssEscape(matchId)}"]`);
-      const home = parseInt(homeEl?.value, 10);
-      const away = parseInt(awayEl?.value, 10);
-      if(!Number.isFinite(home) || !Number.isFinite(away) || home < 0 || away < 0 || home > 30 || away > 30){
-        toast("Entre un score valide entre 0 et 30.", true);
-        return;
-      }
-      saveBtn.disabled = true;
-      try{
-        await savePrediction(matchId, home, away);
-        toast("Prono enregistré ✅");
-      }catch(err){
-        console.error(err);
-        toast("Impossible d’enregistrer le prono.", true);
-      }finally{
-        saveBtn.disabled = false;
-      }
-    }
-
-    async function savePrediction(matchId, home, away){
-      const payload = { matchId:String(matchId), userId:state.currentUser, home:Number(home), away:Number(away), ts: state.firebaseReady ? serverTimestamp() : Date.now() };
-      if(state.firebaseReady && state.db){
-        await setDoc(doc(state.db, "predictions", `${matchId}_${state.currentUser}`), payload);
-      }else{
-        state.predictions[`${matchId}_${state.currentUser}`] = payload;
-        localStorage.setItem("mondial26_predictions_local", JSON.stringify(state.predictions));
-        render();
-      }
-    }
-
-    function computeScores(){
-      const base = USERS.map(u => ({ userId:u.id, points:0, exacts:0, draws:0, winners:0, played:0, missing:0 }));
-      state.matches.forEach(match => {
-        const result = getFinalResult(match);
-        if(!result) return;
-        base.forEach(row => {
-          const p = getPrediction(match.id, row.userId);
-          if(!p){ row.missing++; return; }
-          const pts = pointsFor(p, result);
-          row.points += pts;
-          row.played++;
-          if(pts === 3) row.exacts++;
-          else if(pts === 2) row.draws++;
-          else if(pts === 1) row.winners++;
-        });
-      });
-      return base.sort((a,b) => b.points - a.points || b.exacts - a.exacts || b.draws - a.draws || b.winners - a.winners || a.userId.localeCompare(b.userId));
-    }
-
-    function pointsFor(pred, result){
-      const ph = Number(pred.home), pa = Number(pred.away), rh = Number(result.home), ra = Number(result.away);
-      if(ph === rh && pa === ra) return 3;
-      const predDraw = ph === pa;
-      const realDraw = rh === ra;
-      if(predDraw && realDraw) return 2;
-      const predSide = ph > pa ? "home" : ph < pa ? "away" : "draw";
-      const realSide = rh > ra ? "home" : rh < ra ? "away" : "draw";
-      return predSide === realSide ? 1 : 0;
-    }
-
-    function getFinalResult(match){
-      const over = state.results[String(match.id)];
-      if(over && Number.isFinite(Number(over.home)) && Number.isFinite(Number(over.away))) return { home:Number(over.home), away:Number(over.away), source:"override" };
-      if(match.status === "FINISHED" && match.homeScore !== null && match.awayScore !== null) return { home:match.homeScore, away:match.awayScore, source:"espn" };
-      return null;
-    }
-
-    function isRevealed(match){
-      if(match.status === "IN_PLAY" || match.status === "FINISHED") return true;
-      const kickoff = new Date(match.utcDate).getTime();
-      if(Number.isFinite(kickoff) && Date.now() >= kickoff) return true;
-      return USERS.every(u => Boolean(getPrediction(match.id, u.id)));
-    }
-
-    function getPrediction(matchId, userId){
-      if(!matchId || !userId) return null;
-      return state.predictions[`${String(matchId)}_${String(userId)}`] || null;
-    }
-
-    function filterMatches(){
-      let list = state.matches.slice();
-      if(state.search){
-        list = list.filter(m => `${m.home.name} ${m.home.abbr} ${m.away.name} ${m.away.abbr}`.toLowerCase().includes(state.search));
-      }
-      switch(state.activeFilter){
-        case "open": list = list.filter(m => !isRevealed(m)); break;
-        case "live": list = list.filter(m => m.status === "IN_PLAY"); break;
-        case "next": list = list.filter(m => m.status === "TIMED"); break;
-        case "finished": list = list.filter(m => Boolean(getFinalResult(m))); break;
-        case "mine": list = list.filter(m => getPrediction(m.id, state.currentUser)); break;
-        default: break;
-      }
-      return list.sort((a,b) => new Date(a.utcDate) - new Date(b.utcDate));
-    }
-
-    function groupByDay(list){
-      const map = new Map();
-      list.forEach(m => {
-        const d = new Date(m.utcDate);
-        const key = Number.isFinite(d.getTime()) ? d.toISOString().slice(0,10) : "date-inconnue";
-        if(!map.has(key)) map.set(key, []);
-        map.get(key).push(m);
-      });
-      return Array.from(map.entries()).map(([key, items]) => ({ key, label: key === "date-inconnue" ? "Date inconnue" : formatDay(items[0].utcDate), items }));
-    }
-
-    function renderProfileOptions(){
-      els.profileGrid.innerHTML = USERS.map(u => `
-        <button class="profile-option" type="button" data-profile="${escapeAttr(u.id)}">
-          <span class="avatar">${escapeHtml(u.short)}</span>
-          <span><strong>${escapeHtml(u.name)}</strong><span>${escapeHtml(u.note)}</span></span>
-          <span>→</span>
-        </button>
-      `).join("");
-      els.profileGrid.addEventListener("click", (e) => {
-        const btn = e.target.closest("[data-profile]");
-        if(!btn) return;
-        state.currentUser = btn.dataset.profile;
-        localStorage.setItem("mondial26_profile", state.currentUser);
-        closeProfileModal();
-        updateProfileUI();
-        render();
-        toast(`Profil ${userById(state.currentUser)?.name || ""} sélectionné`);
-      });
-      els.profileModal.addEventListener("click", (e) => {
-        if(e.target === els.profileModal && state.currentUser) closeProfileModal();
-      });
-    }
-
-    function updateProfileUI(){
-      const user = userById(state.currentUser);
-      els.profileAvatar.textContent = user?.short || "?";
-      els.profileName.textContent = user?.name || "Profil";
-    }
-
-    function openProfileModal(){ els.profileModal.classList.add("show"); }
-    function closeProfileModal(){ els.profileModal.classList.remove("show"); }
-
-    function setSync(text){ els.syncText.textContent = text; }
-    function userById(id){ return USERS.find(u => u.id === id); }
-
-    function loadLocalPredictions(){
-      try{ return JSON.parse(localStorage.getItem("mondial26_predictions_local") || "{}"); }
-      catch{ return {}; }
-    }
-
-    function labelStatus(status, revealed=false){
-      if(status === "IN_PLAY") return "En direct";
-      if(status === "FINISHED") return "Terminé";
-      if(revealed) return "Verrouillé";
-      return "À venir";
-    }
-
-    function statusDot(match){
-      if(match.status === "IN_PLAY") return "●";
-      if(match.status === "FINISHED") return "✓";
-      if(isRevealed(match)) return "🔒";
-      return "○";
-    }
-
-    function formatDate(value){
-      const d = new Date(value);
-      if(!Number.isFinite(d.getTime())) return "Date inconnue";
-      return new Intl.DateTimeFormat("fr-FR", { weekday:"short", day:"2-digit", month:"short", hour:"2-digit", minute:"2-digit" }).format(d);
-    }
-
-    function formatDay(value){
-      const d = new Date(value);
-      if(!Number.isFinite(d.getTime())) return "Date inconnue";
-      return new Intl.DateTimeFormat("fr-FR", { weekday:"long", day:"2-digit", month:"long" }).format(d);
-    }
-
-    function formatTime(d){
-      return new Intl.DateTimeFormat("fr-FR", { hour:"2-digit", minute:"2-digit" }).format(d);
-    }
-
-    function scrollToId(id){
-      const el = id === "top" ? document.body : document.getElementById(id);
-      if(el) el.scrollIntoView({ behavior:"smooth", block:"start" });
-    }
-
-    let toastTimer;
-    function toast(message, error=false){
-      clearTimeout(toastTimer);
-      els.toast.textContent = message;
-      els.toast.classList.toggle("error", error);
-      els.toast.classList.add("show");
-      toastTimer = setTimeout(() => els.toast.classList.remove("show"), 2600);
-    }
-
-    function cssEscape(value){
-      if(window.CSS && CSS.escape) return CSS.escape(String(value));
-      return String(value).replace(/[^a-zA-Z0-9_-]/g, "\\$&");
-    }
-
-    function escapeHtml(value){
-      return String(value ?? "").replace(/[&<>'"]/g, c => ({"&":"&amp;","<":"&lt;",">":"&gt;","'":"&#39;",'"':"&quot;"}[c]));
-    }
-
-    function escapeAttr(value){ return escapeHtml(value); }
-  </script>
+<script src="js/storage.js" defer></script>
+<script src="js/settings.js" defer></script>
+<script src="js/camera.js" defer></script>
+<script src="js/capture.js" defer></script>
+<script src="js/composer.js" defer></script>
+<script src="js/printer.js" defer></script>
+<script src="js/gallery.js" defer></script>
+<script src="js/admin.js" defer></script>
+<script src="js/router.js" defer></script>
+<script src="js/pwa.js" defer></script>
+<script src="js/app.js" defer></script>
 </body>
 </html>
