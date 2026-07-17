@@ -14,10 +14,13 @@
    cette page pleine sur le papier 10 x 15 réellement chargé dans la Canon
    SELPHY CP1500.
 
-   NOTE : cette feuille de style ne sert que de méthode de secours. La
-   méthode principale (js/printer.js) partage le montage comme une vraie
-   photo via l'API Web Share, ce qui évite justement ce problème de gabarit
-   et l'en-tête/pied de page ajoutés par iOS pour l'impression de pages web.
+   NOTE : iOS ajoute parfois de lui-même une petite mention (adresse du
+   site + date) dans la marge lorsqu'il imprime une page web — ce n'est pas
+   pilotable en CSS, c'est ajouté par le système au moment de l'impression,
+   pas par cette feuille de style. En contrepartie, window.print() est la
+   méthode qui ouvre le plus directement la fenêtre de choix d'imprimante,
+   sans étape intermédiaire : c'est le compromis retenu pour une borne
+   utilisée sans assistance par de jeunes invités.
    ========================================================================= */
 
 @page {

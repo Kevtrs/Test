@@ -247,7 +247,7 @@
           <label class="field field-check"><input id="set-autoPrint" type="checkbox" /><span>Lancer l'impression automatiquement (sans toucher « Imprimer »)</span></label>
           <label class="field"><span>Nombre de copies suggéré</span><input id="set-copiesSuggested" type="number" min="1" max="9" /></label>
         </div>
-        <p class="admin-note">Le bouton « Imprimer » partage la photo comme une vraie image (comme depuis l'app Photos), pour un rendu net qui remplit bien le papier, sans texte ni date ajoutés par erreur. L'invité touche ensuite « Imprimer » dans le menu qui s'affiche. Pour des raisons de sécurité d'iPadOS, une web-app ne peut jamais envoyer une impression 100&nbsp;% silencieuse : c'est une protection système d'Apple, identique pour tous les sites et toutes les PWA. Avec « Lancer l'impression automatiquement », ce menu s'ouvre tout seul dès que la photo est prête — il reste uniquement l'appui final sur « Imprimer », qu'aucune application web ne peut supprimer.</p>
+        <p class="admin-note">Le bouton « Imprimer » ouvre directement la fenêtre système de choix d'imprimante (« Options ») : l'invité n'a qu'à toucher l'imprimante Canon SELPHY CP1500 puis « Imprimer », sans étape intermédiaire à comprendre. Pour des raisons de sécurité d'iPadOS, une web-app ne peut jamais envoyer une impression 100&nbsp;% silencieuse : c'est une protection système d'Apple, identique pour tous les sites et toutes les PWA. Avec « Lancer l'impression automatiquement », cette fenêtre s'ouvre toute seule dès que la photo est prête — il reste uniquement l'appui final sur « Imprimer », qu'aucune application web ne peut supprimer.</p>
       </div>
 
       <!-- Calibration -->
@@ -269,8 +269,7 @@
             </select>
           </label>
         </div>
-        <p class="admin-note">Ces réglages s'appliquent à la méthode de secours (utilisée si le partage de photo n'est pas disponible). « Aperçu d'impression test » force volontairement cette méthode de secours pour permettre de la régler.</p>
-        <button id="btn-cal-test" class="btn-secondary" type="button">Aperçu d'impression test (méthode de secours)</button>
+        <button id="btn-cal-test" class="btn-secondary" type="button">Aperçu d'impression test</button>
         <button id="btn-cal-reset" class="btn-ghost" type="button">Réinitialiser la calibration</button>
       </div>
 

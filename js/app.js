@@ -213,7 +213,7 @@
     }
     $("btn-print").disabled = true;
     global.PB.printer
-      .shareOrPrintMontage(state.composedImage, settings.printCalibration, {
+      .printMontage(state.composedImage, settings.printCalibration, {
         onAfterPrint: () => {
           if (state.sessionId != null) {
             global.PB.storage.getSession(state.sessionId).then((s) => {
@@ -226,9 +226,8 @@
           }
         },
       })
-      .then((result) => {
+      .then(() => {
         $("btn-print").disabled = false;
-        if (result === "cancelled") return; // l'invité a fermé le menu sans rien choisir : on reste sur l'aperçu
         goToEnd();
       })
       .catch(() => {

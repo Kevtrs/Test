@@ -134,25 +134,24 @@ Puis touchez **Réessayer** dans l'application.
 ## 6. Utiliser AirPrint depuis l'application
 
 1. Sur l'écran d'aperçu final, touchez **Imprimer**.
-2. L'application partage le montage comme une **vraie photo** (méthode
-   `navigator.share`, la même mécanique système que le bouton Partager de
-   l'app Photos) : un menu s'ouvre avec plusieurs options (Imprimer,
-   Enregistrer l'image, AirDrop…).
-3. Touchez **Imprimer** dans ce menu.
-4. Choisissez l'imprimante **Canon SELPHY CP1500**, ajustez le nombre de
-   copies si besoin, puis touchez **Imprimer** pour confirmer.
-5. Une fois ce menu refermé, l'application revient automatiquement à son
-   interface normale puis à l'écran de remerciement.
+2. La fenêtre système **« Options »** s'ouvre **directement** — pas de
+   menu intermédiaire à comprendre : c'est tout de suite le choix de
+   l'imprimante.
+3. Touchez **Imprimante** et choisissez **Canon SELPHY CP1500**.
+4. Ajustez le nombre de copies si besoin, puis touchez le bouton
+   d'impression (icône imprimante en haut à droite) pour confirmer.
+5. Une fois la fenêtre refermée, l'application revient automatiquement à
+   son interface normale puis à l'écran de remerciement.
 
-> Pourquoi partager la photo plutôt qu'imprimer directement la page ? Parce
-> que c'est exactement le chemin qu'emprunte l'app Photos (qui, elle,
-> imprime déjà très bien sur la Canon SELPHY) : en traitant le montage
-> comme une image et non comme « une page web », on évite que l'iPad
-> ajoute automatiquement un titre/URL/date sur le tirage, et l'image
-> remplit correctement le papier 10 × 15 au lieu d'apparaître minuscule au
-> milieu d'une grande page blanche. Si le partage de fichier n'est pas
-> disponible (ancien iPad), l'application se rabat automatiquement sur
-> `window.print()` avec une page d'impression dédiée (`css/print.css`).
+C'est le comportement le plus direct possible — pensé pour des enfants qui
+utilisent la borne sans assistance : un seul écran système à comprendre,
+toujours le même.
+
+> Astuce : une fois la Canon SELPHY CP1500 sélectionnée manuellement une
+> première fois, iPadOS la retient comme imprimante par défaut pour les
+> fois suivantes — la fenêtre s'ouvre alors directement avec la bonne
+> imprimante déjà présélectionnée, il ne reste plus qu'à toucher le bouton
+> d'impression.
 
 ---
 
@@ -170,18 +169,14 @@ de finition de l'application :
   projet exclut explicitement (pas de Mac, pas d'Xcode, pas de Raspberry Pi,
   pas de serveur payant).
 
-L'application fait donc le maximum possible côté web :
-
-- elle partage le montage comme une vraie image via l'API Web Share (même
-  mécanique que l'app Photos), pour un rendu propre et net qui remplit le
-  papier 10 × 15 ;
-- si cette API est indisponible, elle se replie sur une page d'impression
-  dédiée ne contenant **que** le montage (`css/print.css`, `@media
-  print`), redimensionnée pour toujours remplir toute la page quel que
-  soit le gabarit choisi par iPadOS ;
-- dans les deux cas, il ne reste qu'un seul geste supplémentaire pour
-  l'utilisateur : choisir l'imprimante (ou la confirmer si déjà mémorisée)
-  et toucher « Imprimer ».
+L'application fait donc le maximum possible côté web : elle prépare une
+page d'impression dédiée ne contenant **que** le montage, redimensionnée
+pour toujours remplir toute la page quel que soit le gabarit choisi par
+iPadOS (`css/print.css`, `@media print`), puis appelle `window.print()`
+pour ouvrir **directement** la fenêtre de choix d'imprimante — sans étape
+intermédiaire. Il ne reste qu'un seul geste supplémentaire pour
+l'utilisateur : choisir l'imprimante (ou la confirmer si déjà mémorisée)
+et toucher le bouton d'impression.
 
 C'est le geste minimal possible dans les limites d'une web-app sur iPadOS —
 **aucune page web, aucune PWA, sur aucun site, ne peut faire mieux** que ce
@@ -190,28 +185,24 @@ Le seul moyen d'imprimer sans **aucune** confirmation serait une application
 native iOS écrite en Swift avec Xcode, exclue dès le départ du cahier des
 charges de ce projet.
 
+> Petit compromis assumé : comme il s'agit techniquement de l'impression
+> d'une page web, iPadOS peut ajouter de lui-même une toute petite mention
+> (adresse du site + date) dans la marge du tirage — ce n'est pas pilotable
+> depuis le code, c'est ajouté par le système au moment de l'impression.
+> C'est le prix de la simplicité : ouvrir directement le sélecteur
+> d'imprimante plutôt que de passer par un menu de partage à choix
+> multiples, plus déroutant pour de jeunes invités.
+
 ### Réduire au minimum absolu le nombre de gestes (« impression automatique »)
 
 Dans **Admin → Impression**, activez **« Lancer l'impression
 automatiquement »** : dès que le montage est prêt, l'application ouvre
-**toute seule** le menu d'impression (sans que l'invité ait à toucher le
+**toute seule** la fenêtre « Options » (sans que l'invité ait à toucher le
 bouton « Imprimer » de l'application). Il ne reste alors plus qu'**un seul
-geste incompressible** : l'appui final sur « Imprimer » — ce dernier tap ne
-peut être supprimé par aucun site web, c'est une protection anti-abus
-d'Apple (sans elle, n'importe quel site pourrait déclencher des
-impressions à l'insu de l'utilisateur).
-
-> Détail technique : iOS exige un tap explicite de l'utilisateur pour
-> ouvrir le menu de partage (`navigator.share`). Comme l'impression
-> automatique se déclenche sans tap (par un minuteur), l'application
-> utilise alors directement `window.print()` dans ce cas précis — la page
-> d'impression dédiée plutôt que le menu de partage. Le résultat visuel
-> est très proche, avec le même geste final incompressible.
-
-Astuce : une fois la Canon SELPHY CP1500 sélectionnée manuellement une
-première fois, iPadOS la retient comme imprimante par défaut pour les fois
-suivantes — le menu d'impression s'ouvre alors directement avec la bonne
-imprimante déjà présélectionnée.
+geste incompressible** : choisir l'imprimante et toucher le bouton
+d'impression — ce dernier geste ne peut être supprimé par aucun site web,
+c'est une protection anti-abus d'Apple (sans elle, n'importe quel site
+pourrait déclencher des impressions à l'insu de l'utilisateur).
 
 ---
 
@@ -394,6 +385,12 @@ rester facilement modifiable.
   la fenêtre AirPrint. La galerie marque une photo comme « imprimée » dès
   que la feuille d'impression a été fermée (événement `afterprint`), que
   l'impression ait été confirmée ou annulée.
+- **Petite mention système sur le tirage** : iPadOS peut ajouter de
+  lui-même une toute petite mention (adresse du site + date) dans la marge
+  du tirage, car il s'agit techniquement de l'impression d'une page web.
+  Ce n'est pas pilotable en CSS (voir section 7) — c'est le compromis
+  retenu pour ouvrir directement le sélecteur d'imprimante sans étape
+  intermédiaire.
 - **`@page` en paysage** : le support de la règle CSS `@page { size: landscape }`
   varie selon les versions d'iPadOS. L'application ne s'appuie donc pas
   uniquement dessus : elle fixe aussi explicitement les dimensions en

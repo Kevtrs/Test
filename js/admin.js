@@ -319,7 +319,7 @@
       (session) => {
         const s = global.PB.settings.get();
         const url = URL.createObjectURL(session.finalImage);
-        global.PB.printer.shareOrPrintMontage(url, s.printCalibration, {
+        global.PB.printer.printMontage(url, s.printCalibration, {
           onAfterPrint: () => {
             URL.revokeObjectURL(url);
             global.PB.storage.updateSession(session.id, {
