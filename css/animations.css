@@ -1,0 +1,53 @@
+/* =========================================================================
+   Photobooth — animations légères
+   ========================================================================= */
+
+@keyframes spin {
+  to { transform: rotate(360deg); }
+}
+
+@keyframes flashPop {
+  0%   { opacity: 0; }
+  10%  { opacity: 1; }
+  100% { opacity: 0; }
+}
+
+@keyframes countdownPulse {
+  0%   { transform: scale(0.6); opacity: 0; }
+  30%  { transform: scale(1.08); opacity: 1; }
+  60%  { transform: scale(1); opacity: 1; }
+  100% { transform: scale(0.94); opacity: 0; }
+}
+.countdown-number.is-pulsing {
+  animation: countdownPulse 1s cubic-bezier(.2,.8,.3,1);
+}
+
+@keyframes toastIn {
+  from { transform: translateY(-16px); opacity: 0; }
+  to   { transform: translateY(0); opacity: 1; }
+}
+.toast { animation: toastIn 0.25s ease; }
+
+@keyframes fadeIn {
+  from { opacity: 0; }
+  to   { opacity: 1; }
+}
+
+@keyframes popIn {
+  0%   { transform: scale(0.9); opacity: 0; }
+  100% { transform: scale(1); opacity: 1; }
+}
+.preview-image { animation: popIn 0.4s ease; }
+.end-check { animation: popIn 0.5s cubic-bezier(.34,1.56,.64,1); }
+
+@keyframes shutterBlink {
+  0%   { transform: scale(1); }
+  50%  { transform: scale(0.86); }
+  100% { transform: scale(1); }
+}
+.btn-shoot.is-pressed .btn-shoot-ring { animation: shutterBlink 0.2s ease; }
+
+/* Respect des préférences de réduction de mouvement */
+@media (prefers-reduced-motion: reduce) {
+  * { animation-duration: 0.001ms !important; animation-iteration-count: 1 !important; transition-duration: 0.001ms !important; }
+}

@@ -1,0 +1,77 @@
+/* =========================================================================
+   Photobooth — feuille de style d'IMPRESSION UNIQUEMENT
+   Chargée avec media="print" : n'a aucun effet à l'écran.
+   Objectif : n'imprimer QUE le montage final, en 10 x 15 cm, sans aucune
+   interface, marge, ombre ou bordure indésirable.
+   Le support de @page varie selon les versions de Safari iPadOS : on le
+   déclare quand même (dégradation silencieuse si ignoré), et on complète
+   par un dimensionnement en cm directement sur l'image pour rester fiable.
+   ========================================================================= */
+
+@page {
+  size: 100mm 150mm; /* 10 x 15 cm, portrait par défaut */
+  margin: 0;
+}
+
+@page landscape {
+  size: 150mm 100mm;
+}
+
+@media print {
+  html, body {
+    height: auto !important;
+    overflow: visible !important;
+    background: #fff !important;
+    position: static !important;
+  }
+
+  /* On masque strictement toute l'interface de l'application */
+  #app,
+  .toast-root,
+  .modal {
+    display: none !important;
+  }
+
+  #print-root {
+    position: static !important;
+    z-index: auto !important;
+    opacity: 1 !important;
+    pointer-events: auto !important;
+    inset: auto !important;
+    margin: 0 !important;
+    padding: 0 !important;
+    width: 100mm;
+    height: 150mm;
+    background: #fff !important;
+    display: flex !important;
+    align-items: center;
+    justify-content: center;
+    overflow: hidden;
+    box-shadow: none !important;
+    border: none !important;
+  }
+
+  #print-root.is-landscape {
+    width: 150mm;
+    height: 100mm;
+  }
+
+  .print-image {
+    width: 100%;
+    height: 100%;
+    object-fit: cover; /* mode "remplir le papier" par défaut */
+    object-position: center;
+    box-shadow: none !important;
+    border: none !important;
+    border-radius: 0 !important;
+    -webkit-print-color-adjust: exact;
+    print-color-adjust: exact;
+  }
+
+  #print-root.mode-contain .print-image {
+    object-fit: contain;
+  }
+
+  /* Aucun texte, bouton ou élément de navigation ne doit apparaître */
+  a[href]::after { content: "" !important; }
+}
