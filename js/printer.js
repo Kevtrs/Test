@@ -1,12 +1,25 @@
 /*
- * printer.js — prépare la vue d'impression dédiée et déclenche window.print().
+ * printer.js — déclenche l'impression du montage final.
  *
- * Limite technique volontaire : une PWA ne peut pas sélectionner une
- * imprimante AirPrint ni lancer une impression silencieuse. window.print()
- * ouvre la feuille d'impression standard d'iPadOS ; c'est l'utilisateur qui
- * choisit la Canon SELPHY CP1500 et confirme. On ne cherche pas à contourner
- * cela : on se contente de ne laisser apparaître QUE le montage, au bon
- * format, grâce à css/print.css (media="print").
+ * Limite technique volontaire (non contournable) : une PWA ne peut jamais
+ * sélectionner une imprimante AirPrint ni lancer une impression sans
+ * confirmation de l'utilisateur. On ne cherche pas à contourner cela.
+ *
+ * MÉTHODE PRINCIPALE — Web Share API (navigator.share avec un vrai fichier
+ * image) : on partage le montage comme une PHOTO, exactement comme le fait
+ * l'app Photos de l'iPad (qui, elle, imprime déjà très bien sur la Canon
+ * SELPHY). L'utilisateur touche « Imprimer » dans le menu de partage
+ * natif. Comme iOS traite alors un vrai fichier image (et non « une page
+ * web »), on évite deux problèmes propres à l'impression d'une page web
+ * depuis Safari sur iPadOS :
+ *   - l'ajout automatique par le système d'un en-tête/pied de page
+ *     (URL + date + numéro de page), impossible à supprimer en CSS ;
+ *   - une mise en page sur un grand gabarit (Lettre/A4) qui laisse la
+ *     photo minuscule entourée de vide au lieu de remplir le papier 10x15.
+ *
+ * MÉTHODE DE SECOURS — window.print() + css/print.css : utilisée
+ * automatiquement si l'API Web Share (fichiers) n'est pas disponible
+ * (anciennes versions d'iPadOS, ou tests sur ordinateur).
  */
 (function (global) {
   "use strict";
@@ -14,10 +27,43 @@
   const printRoot = () => document.getElementById("print-root");
   const printImage = () => document.getElementById("print-image");
 
+  function dataUrlToFile(dataUrl, filename) {
+    return fetch(dataUrl)
+      .then((r) => r.blob())
+      .then((blob) => new File([blob], filename, { type: blob.type || "image/jpeg" }));
+  }
+
   /**
-   * @param {string} dataUrl - montage final (dataURL)
-   * @param {object} calibration - { zoom, offsetX, offsetY, fillMode, rotation }
-   * @param {object} [callbacks] - { onBeforePrint, onAfterPrint }
+   * Tente le partage natif (Imprimer / Enregistrer l'image / …), puis se
+   * replie sur window.print() si indisponible.
+   * @returns {Promise<"shared"|"printed"|"cancelled">}
+   */
+  function shareOrPrintMontage(dataUrl, calibration, callbacks) {
+    const cb = callbacks || {};
+    return dataUrlToFile(dataUrl, `photobooth-${Date.now()}.jpg`)
+      .then((file) => {
+        if (global.navigator.canShare && global.navigator.canShare({ files: [file] })) {
+          if (typeof cb.onBeforePrint === "function") cb.onBeforePrint();
+          return global.navigator
+            .share({ files: [file] })
+            .then(() => {
+              if (typeof cb.onAfterPrint === "function") cb.onAfterPrint();
+              return "shared";
+            })
+            .catch((err) => {
+              if (err && err.name === "AbortError") return "cancelled"; // menu de partage fermé sans rien choisir
+              return printMontage(dataUrl, calibration, cb);
+            });
+        }
+        return printMontage(dataUrl, calibration, cb);
+      })
+      .catch(() => printMontage(dataUrl, calibration, cb));
+  }
+
+  /**
+   * Méthode de secours : window.print() avec une vue dédiée (css/print.css
+   * masque toute l'interface et n'affiche que le montage).
+   * @returns {Promise<"printed">}
    */
   function printMontage(dataUrl, calibration, callbacks) {
     const root = printRoot();
@@ -38,7 +84,7 @@
         settled = true;
         global.removeEventListener("afterprint", finish);
         if (callbacks && typeof callbacks.onAfterPrint === "function") callbacks.onAfterPrint();
-        resolve();
+        resolve("printed");
       };
 
       global.addEventListener("afterprint", finish);
@@ -63,5 +109,5 @@
   }
 
   global.PB = global.PB || {};
-  global.PB.printer = { printMontage };
+  global.PB.printer = { shareOrPrintMontage, printMontage };
 })(window);
