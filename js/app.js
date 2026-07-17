@@ -165,6 +165,13 @@
           b.classList.toggle("is-active", Number(b.dataset.copies) === state.copies)
         );
         global.PB.router.goTo("preview");
+        if (settings.printingEnabled && settings.autoPrint) {
+          // Laisse la photo s'afficher un court instant avant d'ouvrir la
+          // feuille AirPrint, pour que l'invité comprenne ce qui se passe.
+          setTimeout(() => {
+            if (global.PB.router.current() === "preview") doPrint();
+          }, 900);
+        }
       })
       .catch((err) => {
         console.error(err);

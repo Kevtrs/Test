@@ -22,8 +22,8 @@
     frameSrcPortrait: "assets/frames/frame-generic-portrait.png",
 
     orientation: "landscape", // "landscape" | "portrait"
-    layout: "single", // "single" | "duo" | "grid4" | "strip3"
-    photoCount: 1,
+    layout: "grid4", // "single" | "duo" | "grid4" | "strip3"
+    photoCount: 4,
     countdownDuration: 3,
     delayBetweenPhotos: 2,
 
@@ -33,6 +33,7 @@
     copiesSuggested: 1,
     finalScreenDuration: 8,
     printingEnabled: true,
+    autoPrint: false,
     saveLocalPhotos: true,
     autoReturnHome: true,
     inactivityTimeout: 60,

@@ -244,9 +244,10 @@
       <div class="admin-panel" data-panel="impression">
         <div class="field-grid">
           <label class="field field-check"><input id="set-printingEnabled" type="checkbox" /><span>Impression activée</span></label>
+          <label class="field field-check"><input id="set-autoPrint" type="checkbox" /><span>Lancer l'impression automatiquement (sans toucher « Imprimer »)</span></label>
           <label class="field"><span>Nombre de copies suggéré</span><input id="set-copiesSuggested" type="number" min="1" max="9" /></label>
         </div>
-        <p class="admin-note">Pour des raisons de sécurité d'iPadOS, une web-app ne peut pas envoyer une impression silencieuse. Le bouton « Imprimer » ouvre systématiquement l'interface AirPrint standard, où l'utilisateur choisit l'imprimante Canon SELPHY CP1500 et confirme.</p>
+        <p class="admin-note">Pour des raisons de sécurité d'iPadOS, une web-app ne peut jamais envoyer une impression 100&nbsp;% silencieuse : c'est une protection système d'Apple, identique pour tous les sites et toutes les PWA (même Apple Photos affiche cette même fenêtre). Avec « Lancer l'impression automatiquement », la feuille AirPrint s'ouvre toute seule dès que la photo est prête — il reste uniquement l'appui final de l'utilisateur sur « Imprimer » dans cette fenêtre système, qu'aucune application web ne peut supprimer. C'est le minimum technique incompressible.</p>
       </div>
 
       <!-- Calibration -->

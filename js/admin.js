@@ -136,6 +136,7 @@
     $("set-delayBetweenPhotos").value = s.delayBetweenPhotos;
 
     $("set-printingEnabled").checked = !!s.printingEnabled;
+    $("set-autoPrint").checked = !!s.autoPrint;
     $("set-copiesSuggested").value = s.copiesSuggested;
 
     $("cal-zoom").value = s.printCalibration.zoom;
@@ -410,6 +411,7 @@
       ["set-countdownDuration", "countdownDuration", "number"],
       ["set-delayBetweenPhotos", "delayBetweenPhotos", "number"],
       ["set-printingEnabled", "printingEnabled", "checkbox"],
+      ["set-autoPrint", "autoPrint", "checkbox"],
       ["set-copiesSuggested", "copiesSuggested", "number"],
       ["set-maxSessions", "maxSessions", "number"],
     ].forEach(([id, key, kind]) => bindSimpleField(id, key, kind));

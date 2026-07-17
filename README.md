@@ -12,6 +12,13 @@ sur l'écran d'accueil de l'iPad comme **PWA**, et capable de fonctionner
 Aucune donnée n'est envoyée à un serveur : tout (réglages, photos, galerie)
 reste stocké localement sur l'iPad, dans IndexedDB.
 
+**Réglage par défaut : 4 photos différentes par tirage 10 × 15.** À chaque
+session, l'invité prend 4 photos successives (compte à rebours avant
+chacune), assemblées automatiquement en grille 2 × 2 sur une seule feuille
+10 × 15 cm. C'est modifiable à tout moment dans **Admin → Photos**
+(dispositions disponibles : une grande photo, deux côte à côte, quatre en
+grille, ou trois en bande façon photomaton).
+
 ---
 
 ## Sommaire
@@ -162,7 +169,28 @@ L'application fait donc le maximum possible côté web :
   AirPrint, prête à imprimer en un seul geste supplémentaire de
   l'utilisateur (choisir l'imprimante + confirmer).
 
-C'est le geste minimal possible dans les limites d'une web-app sur iPadOS.
+C'est le geste minimal possible dans les limites d'une web-app sur iPadOS —
+**aucune page web, aucune PWA, sur aucun site, ne peut faire mieux** que ce
+qui est décrit ici, quelle que soit la technologie utilisée en JavaScript.
+Le seul moyen d'imprimer sans **aucune** confirmation serait une application
+native iOS écrite en Swift avec Xcode, exclue dès le départ du cahier des
+charges de ce projet.
+
+### Réduire au minimum absolu le nombre de gestes (« impression automatique »)
+
+Dans **Admin → Impression**, activez **« Lancer l'impression
+automatiquement »** : dès que le montage est prêt, l'application ouvre
+**toute seule** la feuille AirPrint (sans que l'invité ait à toucher le
+bouton « Imprimer »). Il ne reste alors plus qu'**un seul geste
+incompressible** : l'appui final sur le bouton **Imprimer** à l'intérieur
+de la fenêtre système AirPrint — ce dernier tap ne peut être supprimé par
+aucun site web, c'est une protection anti-abus d'Apple (sans elle, n'importe
+quel site pourrait déclencher des impressions à l'insu de l'utilisateur).
+
+Astuce : une fois la Canon SELPHY CP1500 sélectionnée manuellement une
+première fois dans AirPrint, iPadOS la retient comme imprimante par défaut
+pour les fois suivantes — la feuille AirPrint s'ouvre alors directement
+avec la bonne imprimante et le bon format déjà présélectionnés.
 
 ---
 
@@ -332,6 +360,10 @@ rester facilement modifiable.
 
 ## 14. Limites connues
 
+- **Impression automatique** : même activée, elle ne supprime que le tap
+  sur le bouton « Imprimer » de l'application. L'appui final sur
+  « Imprimer » dans la fenêtre système AirPrint reste obligatoire et ne
+  peut être automatisé par aucune web-app (protection anti-abus d'Apple).
 - **Nombre de copies** : le sélecteur « 1 / 2 exemplaires » sur l'écran
   d'aperçu est indicatif. Le nombre réel de copies imprimées se règle et se
   confirme dans la fenêtre AirPrint elle-même (limite d'iPadOS, voir
